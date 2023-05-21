@@ -2,6 +2,9 @@ package com.example.hello.membership;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.hello.membership.domain.Membership;
+import com.example.hello.membership.adapter.out.MembershipRepository;
+import com.example.hello.membership.domain.code.MembershipType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

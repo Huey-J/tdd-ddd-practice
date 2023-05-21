@@ -1,5 +1,6 @@
-package com.example.hello.membership;
+package com.example.hello.membership.domain;
 
+import com.example.hello.membership.domain.code.MembershipType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

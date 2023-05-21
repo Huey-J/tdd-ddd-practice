@@ -1,4 +1,4 @@
-package com.example.hello.membership;
+package com.example.hello.membership.domain.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
