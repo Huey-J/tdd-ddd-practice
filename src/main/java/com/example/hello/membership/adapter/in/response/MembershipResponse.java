@@ -1,4 +1,4 @@
-package com.example.hello.membership.application.port.in.response;
+package com.example.hello.membership.adapter.in.response;
 
 import com.example.hello.membership.domain.code.MembershipType;
 import lombok.Builder;

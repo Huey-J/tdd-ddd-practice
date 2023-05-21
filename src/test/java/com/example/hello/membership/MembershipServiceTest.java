@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import com.example.hello.common.MembershipErrorResult;
 import com.example.hello.common.MembershipException;
 import com.example.hello.membership.adapter.out.MembershipRepository;
-import com.example.hello.membership.application.port.in.response.MembershipResponse;
+import com.example.hello.membership.adapter.in.response.MembershipResponse;
 import com.example.hello.membership.application.service.MembershipService;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
