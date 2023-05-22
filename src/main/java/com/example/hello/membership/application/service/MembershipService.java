@@ -8,6 +8,7 @@ import com.example.hello.membership.application.port.out.MembershipCommandPort;
 import com.example.hello.membership.application.port.out.MembershipQueryPort;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,10 @@ public class MembershipService implements MembershipUseCase {
         .membershipType(savedMembership.getMembershipType())
         .point(savedMembership.getPoint())
         .build();
+  }
+
+  public List<Membership> getMembershipList(final String userId) {
+    return membershipQueryPort.findAllByUserId(userId);
   }
 
 }

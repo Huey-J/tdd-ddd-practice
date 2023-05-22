@@ -15,6 +15,8 @@ import com.example.hello.membership.application.port.out.MembershipQueryPort;
 import com.example.hello.membership.application.service.MembershipService;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,6 +84,26 @@ public class MembershipServiceTest {
           .build();
     }
 
+  }
+
+  @Nested
+  class 멤버십목록조회 {
+
+    @Test
+    public void 멤버십목록조회() {
+      // given
+      doReturn(Arrays.asList(
+          Membership.builder().build(),
+          Membership.builder().build(),
+          Membership.builder().build()
+      )).when(membershipQueryPort).findAllByUserId(userId);
+
+      // when
+      final List<Membership> result = membershipService.getMembershipList(userId);
+
+      // then
+      assertThat(result.size()).isEqualTo(3);
+    }
   }
 
 
