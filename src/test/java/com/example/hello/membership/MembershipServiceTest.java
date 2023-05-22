@@ -9,8 +9,9 @@ import static org.mockito.Mockito.verify;
 
 import com.example.hello.common.MembershipErrorResult;
 import com.example.hello.common.MembershipException;
-import com.example.hello.membership.adapter.out.MembershipRepository;
-import com.example.hello.membership.adapter.in.response.MembershipResponse;
+import com.example.hello.membership.adapter.in.response.MembershipResponseDTO;
+import com.example.hello.membership.application.port.out.MembershipCommandPort;
+import com.example.hello.membership.application.port.out.MembershipQueryPort;
 import com.example.hello.membership.application.service.MembershipService;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
@@ -27,7 +28,9 @@ public class MembershipServiceTest {
   @InjectMocks
   private MembershipService membershipService;
   @Mock
-  private MembershipRepository membershipRepository;
+  private MembershipCommandPort membershipCommandPort;
+  @Mock
+  private MembershipQueryPort membershipQueryPort;
 
   private final String userId = "userId";
   private final MembershipType membershipType = MembershipType.NAVER;
@@ -40,7 +43,7 @@ public class MembershipServiceTest {
     public void 멤버십등록실패_이미존재함() {
       // given
       doReturn(Membership.builder().build()).when(
-          membershipRepository).findByUserIdAndMembershipType(userId, membershipType);
+          membershipQueryPort).findByUserIdAndMembershipType(userId, membershipType);
 
       // when
       final MembershipException result = assertThrows(MembershipException.class,
@@ -54,19 +57,19 @@ public class MembershipServiceTest {
     @Test
     public void 정상등록() {
       // given
-      doReturn(null).when(membershipRepository).findByUserIdAndMembershipType(userId, membershipType);
-      doReturn(membership()).when(membershipRepository).save(any(Membership.class));
+      doReturn(null).when(membershipQueryPort).findByUserIdAndMembershipType(userId, membershipType);
+      doReturn(membership()).when(membershipCommandPort).save(any(Membership.class));
 
       // when
-      final MembershipResponse result = membershipService.addMembership(userId, membershipType, point);
+      final MembershipResponseDTO result = membershipService.addMembership(userId, membershipType, point);
 
       // then
       assertThat(result.getId()).isNotNull();
       assertThat(result.getMembershipType()).isEqualTo(MembershipType.NAVER);
 
       // verify
-      verify(membershipRepository, times(1)).findByUserIdAndMembershipType(userId, membershipType);
-      verify(membershipRepository, times(1)).save(any(Membership.class));
+      verify(membershipQueryPort, times(1)).findByUserIdAndMembershipType(userId, membershipType);
+      verify(membershipCommandPort, times(1)).save(any(Membership.class));
     }
 
     private Membership membership() {

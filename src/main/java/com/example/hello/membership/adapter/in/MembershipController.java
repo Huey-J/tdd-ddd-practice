@@ -1,10 +1,10 @@
 package com.example.hello.membership.adapter.in;
 
-import static com.example.hello.membership.adapter.in.MembershipConstants.USER_ID_HEADER;
+import static com.example.hello.common.MembershipConstants.USER_ID_HEADER;
 
 import com.example.hello.membership.adapter.in.request.MembershipCreateRequestDTO;
-import com.example.hello.membership.adapter.in.response.MembershipResponse;
-import com.example.hello.membership.application.service.MembershipService;
+import com.example.hello.membership.adapter.in.response.MembershipResponseDTO;
+import com.example.hello.membership.application.port.in.MembershipUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MembershipController {
 
-  private final MembershipService membershipService;
+  private final MembershipUseCase membershipUseCase;
 
   @PostMapping("/api/v1/memberships")
-  public ResponseEntity<MembershipResponse> addMembership(
+  public ResponseEntity<MembershipResponseDTO> addMembership(
       @RequestHeader(USER_ID_HEADER) final String userId,
       @RequestBody @Valid final MembershipCreateRequestDTO dto) {
-    final MembershipResponse membershipResponse = membershipService.addMembership(userId,
+    final MembershipResponseDTO membershipResponse = membershipUseCase.addMembership(userId,
         dto.getMembershipType(), dto.getPoint());
     return ResponseEntity.status(HttpStatus.CREATED).body(membershipResponse);
   }

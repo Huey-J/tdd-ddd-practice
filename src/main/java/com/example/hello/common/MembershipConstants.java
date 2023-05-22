@@ -1,4 +1,4 @@
-package com.example.hello.membership.adapter.in;
+package com.example.hello.common;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

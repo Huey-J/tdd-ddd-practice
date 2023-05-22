@@ -1,6 +1,6 @@
 package com.example.hello.membership;
 
-import static com.example.hello.membership.adapter.in.MembershipConstants.USER_ID_HEADER;
+import static com.example.hello.common.MembershipConstants.USER_ID_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -11,7 +11,7 @@ import com.example.hello.common.MembershipErrorResult;
 import com.example.hello.common.MembershipException;
 import com.example.hello.membership.adapter.in.MembershipController;
 import com.example.hello.membership.adapter.in.request.MembershipCreateRequestDTO;
-import com.example.hello.membership.adapter.in.response.MembershipResponse;
+import com.example.hello.membership.adapter.in.response.MembershipResponseDTO;
 import com.example.hello.membership.application.service.MembershipService;
 import com.example.hello.membership.domain.code.MembershipType;
 import com.google.gson.Gson;
@@ -150,7 +150,7 @@ public class MembershipControllerTest {
   public void 멤버십등록성공() throws Exception {
     // given
     final String url = "/api/v1/memberships";
-    final MembershipResponse membershipResponse = MembershipResponse.builder()
+    final MembershipResponseDTO membershipResponse = MembershipResponseDTO.builder()
         .id(-1L)
         .membershipType(MembershipType.NAVER).build();
 
@@ -167,9 +167,9 @@ public class MembershipControllerTest {
     // then
     resultActions.andExpect(status().isCreated());
 
-    final MembershipResponse response = gson.fromJson(resultActions.andReturn()
+    final MembershipResponseDTO response = gson.fromJson(resultActions.andReturn()
         .getResponse()
-        .getContentAsString(StandardCharsets.UTF_8), MembershipResponse.class);
+        .getContentAsString(StandardCharsets.UTF_8), MembershipResponseDTO.class);
 
     assertThat(response.getMembershipType()).isEqualTo(MembershipType.NAVER);
     assertThat(response.getId()).isNotNull();
