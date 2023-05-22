@@ -65,7 +65,8 @@ public class MembershipServiceTest {
 
       // then
       assertThat(result.getId()).isNotNull();
-      assertThat(result.getMembershipType()).isEqualTo(MembershipType.NAVER);
+      assertThat(result.getMembershipType()).isEqualTo(membershipType);
+      assertThat(result.getPoint()).isEqualTo(point);
 
       // verify
       verify(membershipQueryPort, times(1)).findByUserIdAndMembershipType(userId, membershipType);

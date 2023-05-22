@@ -12,5 +12,6 @@ public class MembershipResponseDTO {
 
   private final Long id;
   private final MembershipType membershipType;
+  private final Integer point;
 
 }

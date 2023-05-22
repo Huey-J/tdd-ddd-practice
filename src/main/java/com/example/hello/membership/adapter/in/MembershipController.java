@@ -24,9 +24,9 @@ public class MembershipController {
   public ResponseEntity<MembershipResponseDTO> addMembership(
       @RequestHeader(USER_ID_HEADER) final String userId,
       @RequestBody @Valid final MembershipCreateRequestDTO dto) {
-    final MembershipResponseDTO membershipResponse = membershipUseCase.addMembership(userId,
+    final MembershipResponseDTO membershipResponseDTO = membershipUseCase.addMembership(userId,
         dto.getMembershipType(), dto.getPoint());
-    return ResponseEntity.status(HttpStatus.CREATED).body(membershipResponse);
+    return ResponseEntity.status(HttpStatus.CREATED).body(membershipResponseDTO);
   }
 
 }

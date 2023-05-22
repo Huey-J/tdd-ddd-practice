@@ -39,6 +39,7 @@ public class MembershipService implements MembershipUseCase {
     return MembershipResponseDTO.builder()
         .id(savedMembership.getId())
         .membershipType(savedMembership.getMembershipType())
+        .point(savedMembership.getPoint())
         .build();
   }
 
