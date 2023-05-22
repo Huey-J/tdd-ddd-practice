@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.adapter.out.MembershipJpaRepository;
 import com.example.hello.membership.domain.code.MembershipType;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,49 @@ public class MembershipJpaRepositoryTest {
 
       // then
       assertThat(findResult).isNull();
+    }
+  }
+
+  @Nested
+  class 멤버십목록조회 {
+
+    // common given
+    private final String requestUserId = "userId";
+
+    @Test
+    public void 정상조회_리스트2개() {
+      // given
+      final Membership naverMembership = Membership.builder()
+          .userId(requestUserId)
+          .membershipType(MembershipType.NAVER)
+          .point(10000)
+          .build();
+
+      final Membership kakaoMembership = Membership.builder()
+          .userId(requestUserId)
+          .membershipType(MembershipType.KAKAO)
+          .point(10000)
+          .build();
+
+      membershipRepository.save(naverMembership);
+      membershipRepository.save(kakaoMembership);
+
+      // when
+      List<Membership> result = membershipRepository.findAllByUserId(requestUserId);
+
+      // then
+      assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void 아무것도없음() {
+      // given
+
+      // when
+      List<Membership> result = membershipRepository.findAllByUserId(requestUserId);
+
+      // then
+      assertThat(result.size()).isEqualTo(0);
     }
   }
 
