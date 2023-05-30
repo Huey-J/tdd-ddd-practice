@@ -12,10 +12,12 @@ import com.example.hello.common.MembershipException;
 import com.example.hello.membership.adapter.in.MembershipController;
 import com.example.hello.membership.adapter.in.request.MembershipCreateRequestDTO;
 import com.example.hello.membership.adapter.in.response.MembershipResponseDTO;
+import com.example.hello.membership.adapter.in.response.MembershipResponseDetailDTO;
 import com.example.hello.membership.application.service.MembershipService;
 import com.example.hello.membership.domain.code.MembershipType;
 import com.google.gson.Gson;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -216,6 +218,47 @@ public class MembershipControllerTest {
           .membershipType(membershipType)
           .build();
     }
+  }
+
+  @Nested
+  class 멤버십목록조회 {
+
+    // common given
+    private final String url = "/api/v1/memberships";
+    private final String userIdInHeader = "12345";
+
+    @Test
+    public void 멤버십목록조회실패_사용자식별값이헤더에없음() throws Exception {
+      // given
+
+      // when
+      final ResultActions resultActions = mockMvc.perform(
+          MockMvcRequestBuilders.get(url)
+      );
+
+      // then
+      resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 멤버십목록조회성공() throws Exception {
+      // given
+      doReturn(Arrays.asList(
+          MembershipResponseDetailDTO.builder().build(),
+          MembershipResponseDetailDTO.builder().build(),
+          MembershipResponseDetailDTO.builder().build()
+      )).when(membershipService).getMembershipList(userIdInHeader);
+
+      // when
+      final ResultActions resultActions = mockMvc.perform(
+          MockMvcRequestBuilders.get(url)
+              .header(USER_ID_HEADER, userIdInHeader)
+      );
+
+      // then
+      resultActions.andExpect(status().isOk());
+    }
+
   }
 
 }
