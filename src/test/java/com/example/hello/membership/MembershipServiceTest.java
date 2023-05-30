@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import com.example.hello.common.MembershipErrorResult;
 import com.example.hello.common.MembershipException;
 import com.example.hello.membership.adapter.in.response.MembershipResponseDTO;
+import com.example.hello.membership.adapter.in.response.MembershipResponseDetailDTO;
 import com.example.hello.membership.application.port.out.MembershipCommandPort;
 import com.example.hello.membership.application.port.out.MembershipQueryPort;
 import com.example.hello.membership.application.service.MembershipService;
@@ -99,7 +100,7 @@ public class MembershipServiceTest {
       )).when(membershipQueryPort).findAllByUserId(userId);
 
       // when
-      final List<Membership> result = membershipService.getMembershipList(userId);
+      final List<MembershipResponseDetailDTO> result = membershipService.getMembershipList(userId);
 
       // then
       assertThat(result.size()).isEqualTo(3);

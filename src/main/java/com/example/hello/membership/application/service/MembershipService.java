@@ -2,6 +2,7 @@ package com.example.hello.membership.application.service;
 
 import com.example.hello.common.MembershipErrorResult;
 import com.example.hello.common.MembershipException;
+import com.example.hello.membership.adapter.in.response.MembershipResponseDetailDTO;
 import com.example.hello.membership.application.port.in.MembershipUseCase;
 import com.example.hello.membership.adapter.in.response.MembershipResponseDTO;
 import com.example.hello.membership.application.port.out.MembershipCommandPort;
@@ -9,6 +10,7 @@ import com.example.hello.membership.application.port.out.MembershipQueryPort;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +46,19 @@ public class MembershipService implements MembershipUseCase {
         .build();
   }
 
-  public List<Membership> getMembershipList(final String userId) {
-    return membershipQueryPort.findAllByUserId(userId);
+  @Override
+  public List<MembershipResponseDetailDTO> getMembershipList(final String userId) {
+    final List<Membership> membershipList = membershipQueryPort.findAllByUserId(userId);
+
+    // TODO 추후 ModelMapper 적용
+    return membershipList.stream()
+        .map(v -> MembershipResponseDetailDTO.builder()
+            .id(v.getId())
+            .membershipType(v.getMembershipType())
+            .point(v.getPoint())
+            .createdAt(v.getCreatedAt())
+            .build())
+        .collect(Collectors.toList());
   }
 
 }
