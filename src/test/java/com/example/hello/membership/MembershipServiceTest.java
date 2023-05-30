@@ -18,6 +18,7 @@ import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,7 @@ public class MembershipServiceTest {
   private final String userId = "userId";
   private final MembershipType membershipType = MembershipType.NAVER;
   private final Integer point = 10000;
+  private final Long membershipId = -1L;
 
   @Nested
   class 멤버십등록 {
@@ -75,16 +77,6 @@ public class MembershipServiceTest {
       verify(membershipQueryPort, times(1)).findByUserIdAndMembershipType(userId, membershipType);
       verify(membershipCommandPort, times(1)).save(any(Membership.class));
     }
-
-    private Membership membership() {
-      return Membership.builder()
-          .id(-1L)
-          .userId(userId)
-          .point(point)
-          .membershipType(MembershipType.NAVER)
-          .build();
-    }
-
   }
 
   @Nested
@@ -107,5 +99,53 @@ public class MembershipServiceTest {
     }
   }
 
+  @Nested
+  class 멤버십상세조회 {
 
+    @Test
+    public void 존재하지않음_실패() {
+      // given
+      doReturn(Optional.empty()).when(membershipQueryPort).findById(membershipId);
+
+      // when
+      final MembershipException result = assertThrows(MembershipException.class, () -> membershipService.getMembership(membershipId, userId));
+
+      // then
+      assertThat(result.getErrorResult()).isEqualTo(MembershipErrorResult.MEMBERSHIP_NOT_FOUND);
+    }
+
+    @Test
+    public void 본인이아님_실패() {
+      // given
+      doReturn(Optional.of(membership())).when(membershipQueryPort).findById(membershipId);
+
+      // when
+      final MembershipException result = assertThrows(MembershipException.class, () -> membershipService.getMembership(membershipId, "notowner"));
+
+      // then
+      assertThat(result.getErrorResult()).isEqualTo(MembershipErrorResult.NOT_MEMBERSHIP_OWNER);
+    }
+
+    @Test
+    public void 성공() {
+      // given
+      doReturn(Optional.of(membership())).when(membershipQueryPort).findById(membershipId);
+
+      // when
+      final MembershipResponseDetailDTO result = membershipService.getMembership(membershipId, userId);
+
+      // then
+      assertThat(result.getMembershipType()).isEqualTo(MembershipType.NAVER);
+      assertThat(result.getPoint()).isEqualTo(point);
+    }
+  }
+
+  private Membership membership() {
+    return Membership.builder()
+        .id(membershipId)
+        .userId(userId)
+        .point(point)
+        .membershipType(MembershipType.NAVER)
+        .build();
+  }
 }

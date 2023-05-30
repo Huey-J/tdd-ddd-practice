@@ -10,6 +10,7 @@ import com.example.hello.membership.application.port.out.MembershipQueryPort;
 import com.example.hello.membership.domain.Membership;
 import com.example.hello.membership.domain.code.MembershipType;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,22 @@ public class MembershipService implements MembershipUseCase {
             .createdAt(v.getCreatedAt())
             .build())
         .collect(Collectors.toList());
+  }
+
+  public MembershipResponseDetailDTO getMembership(final Long membershipId, final String userId) {
+    final Membership membership = membershipQueryPort.findById(membershipId)
+        .orElseThrow(() -> new MembershipException(MembershipErrorResult.MEMBERSHIP_NOT_FOUND));
+
+    if (!membership.getUserId().equals(userId)) {
+      throw new MembershipException(MembershipErrorResult.NOT_MEMBERSHIP_OWNER);
+    }
+
+    return MembershipResponseDetailDTO.builder()
+        .id(membership.getId())
+        .membershipType(membership.getMembershipType())
+        .point(membership.getPoint())
+        .createdAt(membership.getCreatedAt())
+        .build();
   }
 
 }
