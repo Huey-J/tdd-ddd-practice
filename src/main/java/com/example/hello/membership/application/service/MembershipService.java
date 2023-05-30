@@ -62,6 +62,7 @@ public class MembershipService implements MembershipUseCase {
         .collect(Collectors.toList());
   }
 
+  @Override
   public MembershipResponseDetailDTO getMembership(final Long membershipId, final String userId) {
     final Membership membership = membershipQueryPort.findById(membershipId)
         .orElseThrow(() -> new MembershipException(MembershipErrorResult.MEMBERSHIP_NOT_FOUND));

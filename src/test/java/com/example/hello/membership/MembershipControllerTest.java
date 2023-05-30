@@ -258,7 +258,49 @@ public class MembershipControllerTest {
       // then
       resultActions.andExpect(status().isOk());
     }
+  }
 
+  @Nested
+  class 멤버십상세조회 {
+
+    // common given
+    private final String url = "/api/v1/memberships";
+    private final String userIdInHeader = "12345";
+
+    @Test
+    public void 존재하지않음_실패() throws Exception {
+      // given
+      doThrow(new MembershipException(MembershipErrorResult.MEMBERSHIP_NOT_FOUND))
+          .when(membershipService)
+          .getMembership(-1L, userIdInHeader);
+
+      // when
+      final ResultActions resultActions = mockMvc.perform(
+          MockMvcRequestBuilders.get(url + "/-1")
+              .header(USER_ID_HEADER, userIdInHeader)
+      );
+
+      // then
+      resultActions.andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void 성공() throws Exception {
+      // given
+      doReturn(MembershipResponseDetailDTO.builder().build())
+          .when(membershipService)
+          .getMembership(-1L, userIdInHeader);
+
+      // when
+      final ResultActions resultActions = mockMvc.perform(
+          MockMvcRequestBuilders.get(url + "/-1")
+              .header(USER_ID_HEADER, userIdInHeader)
+              .param("membershipType", MembershipType.NAVER.name())
+      );
+
+      // then
+      resultActions.andExpect(status().isOk());
+    }
   }
 
 }

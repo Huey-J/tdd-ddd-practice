@@ -11,4 +11,6 @@ public interface MembershipUseCase {
 
   List<MembershipResponseDetailDTO> getMembershipList(final String userId);
 
+  MembershipResponseDetailDTO getMembership(final Long id, final String userId);
+
 }
