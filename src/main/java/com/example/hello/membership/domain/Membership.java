@@ -46,4 +46,8 @@ public class Membership {
   @UpdateTimestamp
   @Column(length = 20)
   private LocalDateTime updatedAt;
+
+  public void addPointByPrice(int price) {
+    this.setPoint((int) (this.getPoint() + (price * 0.01)));
+  }
 }
