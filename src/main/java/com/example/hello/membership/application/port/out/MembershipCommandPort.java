@@ -6,4 +6,6 @@ public interface MembershipCommandPort {
 
   Membership save(Membership membership);
 
+  void deleteById(Long membershipId);
+
 }

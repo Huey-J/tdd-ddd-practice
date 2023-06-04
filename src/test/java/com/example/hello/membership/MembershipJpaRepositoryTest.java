@@ -132,4 +132,25 @@ public class MembershipJpaRepositoryTest {
     }
   }
 
+  @Nested
+  class 멤버십삭제 {
+
+    @Test
+    void 멤버십추가후삭제() {
+      // given
+      final Membership naverMembership = Membership.builder()
+          .userId("userId")
+          .membershipType(MembershipType.NAVER)
+          .point(1000)
+          .build();
+
+      final Membership savedMembership = membershipRepository.save(naverMembership);
+
+      // when
+      membershipRepository.deleteById(savedMembership.getId());
+
+      // then
+    }
+  }
+
 }

@@ -15,4 +15,9 @@ public class MembershipCommandRepository implements MembershipCommandPort {
   public Membership save(Membership membership) {
     return membershipJpaRepository.save(membership);
   }
+
+  @Override
+  public void deleteById(Long membershipId) {
+    membershipJpaRepository.deleteById(membershipId);
+  }
 }

@@ -13,4 +13,6 @@ public interface MembershipUseCase {
 
   MembershipResponseDetailDTO getMembership(final Long id, final String userId);
 
+  void removeMembership(final Long membershipId, final String userId);
+
 }

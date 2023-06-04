@@ -79,4 +79,16 @@ public class MembershipService implements MembershipUseCase {
         .build();
   }
 
+  @Override
+  public void removeMembership(final Long membershipId, final String userId) {
+    final Membership membership = membershipQueryPort.findById(membershipId)
+        .orElseThrow(() -> new MembershipException(MembershipErrorResult.MEMBERSHIP_NOT_FOUND));
+
+    if (!membership.getUserId().equals(userId)) {
+      throw new MembershipException(MembershipErrorResult.NOT_MEMBERSHIP_OWNER);
+    }
+
+    membershipCommandPort.deleteById(membershipId);
+  }
+
 }

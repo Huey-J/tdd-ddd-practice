@@ -46,6 +46,8 @@ public class MembershipControllerTest {
   private MockMvc mockMvc;
   private Gson gson;
 
+  private final String userIdInHeader = "12345";
+
   @BeforeEach
   public void init() {
     gson = new Gson();
@@ -67,7 +69,6 @@ public class MembershipControllerTest {
 
     // common given
     private final String url = "/api/v1/memberships";
-    private final String userIdInHeader = "12345";
     private final MembershipType requestedMembershipType = MembershipType.NAVER;
     private final Integer requestedPoint = 10000;
 
@@ -225,7 +226,6 @@ public class MembershipControllerTest {
 
     // common given
     private final String url = "/api/v1/memberships";
-    private final String userIdInHeader = "12345";
 
     @Test
     public void 멤버십목록조회실패_사용자식별값이헤더에없음() throws Exception {
@@ -265,7 +265,6 @@ public class MembershipControllerTest {
 
     // common given
     private final String url = "/api/v1/memberships";
-    private final String userIdInHeader = "12345";
 
     @Test
     public void 존재하지않음_실패() throws Exception {
@@ -300,6 +299,40 @@ public class MembershipControllerTest {
 
       // then
       resultActions.andExpect(status().isOk());
+    }
+  }
+
+  @Nested
+  class 멤버십삭제{
+
+    // common given
+    private final String url = "/api/v1/memberships/-1";
+
+    @Test
+    public void 사용자식별값이헤더에없음_실패() throws Exception {
+      // given
+
+      // when
+      final ResultActions resultActions = mockMvc.perform(
+          MockMvcRequestBuilders.delete(url)
+      );
+
+      // then
+      resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 성공() throws Exception {
+      // given
+
+      // when
+      final ResultActions resultActions = mockMvc.perform(
+          MockMvcRequestBuilders.delete(url)
+              .header(USER_ID_HEADER, userIdInHeader)
+      );
+
+      // then
+      resultActions.andExpect(status().isNoContent());
     }
   }
 

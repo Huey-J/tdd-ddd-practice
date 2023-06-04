@@ -140,6 +140,49 @@ public class MembershipServiceTest {
     }
   }
 
+  @Nested
+  class 멤버십삭제 {
+
+    @Test
+    void 존재하지않음_실패() {
+      // given
+      doReturn(Optional.empty()).when(membershipQueryPort).findById(membershipId);
+
+      // when
+      final MembershipException result = assertThrows(MembershipException.class,
+          () -> membershipService.removeMembership(membershipId, userId));
+
+      // then
+      assertThat(result.getErrorResult()).isEqualTo(MembershipErrorResult.MEMBERSHIP_NOT_FOUND);
+    }
+
+    @Test
+    void 본인이아님_실패() {
+      // given
+      final Membership membership = membership();
+      doReturn(Optional.of(membership)).when(membershipQueryPort).findById(membershipId);
+
+      // when
+      final MembershipException result = assertThrows(MembershipException.class,
+          () -> membershipService.removeMembership(membershipId, "notowner"));
+
+      // then
+      assertThat(result.getErrorResult()).isEqualTo(MembershipErrorResult.NOT_MEMBERSHIP_OWNER);
+    }
+
+    @Test
+    void 성공() {
+      // given
+      final Membership membership = membership();
+      doReturn(Optional.of(membership)).when(membershipQueryPort).findById(membershipId);
+
+      // when
+      membershipService.removeMembership(membershipId, userId);
+
+      // then
+    }
+  }
+
   private Membership membership() {
     return Membership.builder()
         .id(membershipId)
